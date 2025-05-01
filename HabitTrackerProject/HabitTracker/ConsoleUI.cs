@@ -4,62 +4,30 @@ using Spectre.Console;
 
 public class ConsoleUI
 {
-    List<Habit> Habits;
+    DataManager dataManager;
     public ConsoleUI () {
-        Habits = new List<Habit>();
+        dataManager = new DataManager();
     }
 
     public void Show() {
-
-        // Get habits from habits.txt file
-        string[] contentFromFile = File.ReadAllLines("habits.txt");
-        foreach(string line in contentFromFile) {
-            string[] splitted = line.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            string name = splitted[0];
-            int goal = int.Parse(splitted[1]);
-            int done = int.Parse(splitted[2]);
-
-            Habit newHabit = new Habit(name);
-            newHabit.updateGoal(goal);
-            Habits.Add(newHabit);
-        }
-
 
         Habit habit;
         string operation;
         string command;
         
         // Main menu
-        command = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("What do you want to do?")
-                .AddChoices(new[] {
-                    "Set habit goals",
-                    "Input habit",
-                    "View report",
-                    "Exit program"
-                }));
+        command = ShowMainMenu();
 
         while (command != "Exit program") {
             if (command == "Set habit goals") {
                 Console.WriteLine("Set goals for: ");
-                for (int index = 0; index < Habits.Count(); index++) {
-                    Habit habitItem = Habits[index];
-                    int goal = AnsiConsole.Prompt(new TextPrompt<int>(habitItem.Name));
-
-                    Habit newHabit = habitItem;
+                for (int index = 0; index < dataManager.Habits.Count(); index++) {
+                    Habit habitItem = dataManager.Habits[index];
+                    int goal = AnsiConsole.Prompt(new TextPrompt<int>(habitItem.Name + ": "));
                     habitItem.updateGoal(goal);
 
                     // update habits.txt
-                    int habitIndex = Habits.FindIndex(t => t == newHabit);
-                    Habits[habitIndex] = newHabit;
-                    List<string> habitData = new List<string>();
-
-                    foreach (Habit item in Habits) {
-                        string habitLine = item + "," + item.getGoal() + "," + item.getDone();
-                        habitData.Add(habitLine);
-                    }
-                    File.WriteAllLines("habits.txt", habitData);
+                    dataManager.updateHabit(habitItem);
                 }
 
             } else if (command == "Input habit"){
@@ -68,7 +36,7 @@ public class ConsoleUI
                     habit = AnsiConsole.Prompt(
                         new SelectionPrompt<Habit>()
                             .Title("Choose habit")
-                            .AddChoices(Habits));
+                            .AddChoices(dataManager.Habits));
 
                     operation = AnsiConsole.Prompt(
                         new SelectionPrompt<string>()
@@ -83,30 +51,14 @@ public class ConsoleUI
                         habit.addHabitDone();
 
                         // update habits.txt
-                        int habitIndex = Habits.FindIndex(t => t == habit);
-                        Habits[habitIndex] = habit;
-                        List<string> habitData = new List<string>();
-
-                        foreach (Habit item in Habits) {
-                            string habitLine = item + "," + item.getGoal() + "," + item.getDone();
-                            habitData.Add(habitLine);
-                        }
-                        File.WriteAllLines("habits.txt", habitData);
+                        dataManager.updateHabit(habit);
                     }
 
                     if (operation == "Subtract") {
                         habit.subtractHabitDone();
 
                         // update habits.txt
-                        int habitIndex = Habits.FindIndex(t => t == habit);
-                        Habits[habitIndex] = habit;
-                        List<string> habitData = new List<string>();
-
-                        foreach (Habit item in Habits) {
-                            string habitLine = item + "," + item.getGoal() + "," + item.getDone();
-                            habitData.Add(habitLine);
-                        }
-                        File.WriteAllLines("habits.txt", habitData);
+                        dataManager.updateHabit(habit);
                     }
 
                     AnsiConsole.WriteLine($"{habit} successfully updated. {habit.getDone()} {habit} completed.");
@@ -114,29 +66,23 @@ public class ConsoleUI
                 } while (operation == "Go back");
 
 
-            } else if (command == "View report") {
-                var table = new Table();
-                table.AddColumn("Habit");
-                table.AddColumn("Goal");
-                table.AddColumn("Done");
-                table.AddColumn("Status");
-
-                foreach (Habit habitItem in Habits) {
-                    string status = habitItem.isCompleted() ? "[green]Completed[/]" : "[red]Not Completed[/]";
-                    table.AddRow(habitItem.Name, Convert.ToString(habitItem.getGoal()), Convert.ToString(habitItem.getDone()), status);
-                }
-                AnsiConsole.Write(table);
             }
-            command = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("What do you want to do?")
-                    .AddChoices(new[] {
-                    "Set habit goals",
-                    "Input habit",
-                    "View report",
-                    "Exit program"
-                    }));
+            
+            command = ShowMainMenu();
         }
 
+    }
+
+    public string ShowMainMenu() {
+        string command = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("What do you want to do?")
+                .AddChoices(new[] {
+                "Set habit goals",
+                "Input habit",
+                "Exit program"
+                }));
+
+        return command;
     }
 }
