@@ -1,3 +1,4 @@
+
 namespace HabitTracker;
 
 using System;
@@ -5,6 +6,7 @@ using System;
 public class Habit {
     public string Name { get; }
     private int Goal { get; set; }
+    private int Done { get; set; }
 
     public Habit (string name) {
         this.Name = name;
@@ -17,20 +19,6 @@ public class Habit {
 
     public void updateGoal(int goal) {
         this.Goal = goal;
-    }
-
-    public override string ToString () {
-        return this.Name;
-    }
-}
-
-public class Tracker {
-    public Habit Habit { get; }
-    private int Done { get; set; }
-
-    public Tracker (Habit habit) {
-        this.Habit = habit;
-        this.Done = 0;
     }
 
     public int getDone() {
@@ -47,28 +35,16 @@ public class Tracker {
         }
     }
 
-    public bool IsCompleted() {
-        if (this.Done >= this.Habit.getGoal()) {
+    public bool isCompleted() {
+        if (this.Done >= this.getGoal()) {
             return true;
         } else {
             return false;
         }
     }
-}
 
-public class Report {
-    public DateTime Day { get; }
-    public List<Tracker> Trackers { get; }
-    
-    public Report () {
-        this.Day = DateTime.Today;
-    }
-
-    public string getTodaysReport() {
-        throw new NotImplementedException();
-    }
-
-    public string getAllReports() {
-        throw new NotImplementedException();
+    public override string ToString () {
+        return this.Name;
     }
 }
+
