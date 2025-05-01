@@ -6,12 +6,10 @@ public class DomainTests
     string name;
     int goal;
     Habit newHabit;
-    Tracker newTracker;
 
     public DomainTests () {
         name = "First Habit";
         newHabit = new Habit(name);
-        newTracker = new Tracker(newHabit);
     }
 
     [Fact]
@@ -29,25 +27,26 @@ public class DomainTests
     }
 
     [Fact]
-    public void Test_Tracker_Initialization()
+    public void Test_Habit_AddHabitDone()
     {
-        newHabit.updateGoal(1000);
-        Assert.Equal(newTracker.Habit, newHabit);
-        Assert.Equal(newTracker.getDone(), 0);
-        Assert.Equal(newTracker.IsCompleted(), false);
+        newHabit.addHabitDone();
+        Assert.Equal(newHabit.getDone(), 1);
     }
 
     [Fact]
-    public void Test_Tracker_AddHabitDone()
+    public void Test_Habit_SubtractHabitDone()
     {
-        newTracker.addHabitDone();
-        Assert.Equal(newTracker.getDone(), 1);
+        newHabit.subtractHabitDone();
+        Assert.Equal(newHabit.getDone(), 0);
     }
 
     [Fact]
-    public void Test_Tracker_SubtractHabitDone()
+    public void Test_Habit_IsCompleted()
     {
-        newTracker.subtractHabitDone();
-        Assert.Equal(newTracker.getDone(), 0);
+        newHabit.updateGoal(10);
+        for (int i = 0; i < 10; i++) {
+            newHabit.addHabitDone();
+        }
+        Assert.Equal(newHabit.isCompleted(), true);
     }
 }

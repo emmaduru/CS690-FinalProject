@@ -1,0 +1,3 @@
+Glasses of water,3,4
+Hours of sleep,10,0
+Number of steps,12000,0
