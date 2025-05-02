@@ -113,7 +113,13 @@ public class ConsoleUI
                 table.AddColumn("Status");
 
                 foreach (Habit habit in dataManager.Habits) {
-                    string status = habit.isCompleted() ? "[green]Complete[/]" : "[red]Incomplete[/]";
+                    string status;
+                    
+                    if (habit.getDone() == 0) {
+                        status = "[red]Not Started[/]";
+                    } else {
+                        status = habit.isCompleted() ? "[green]Complete[/]" : "[red]Incomplete[/]";
+                    }
                     table.AddRow(habit.Name, Convert.ToString(habit.getGoal()), Convert.ToString(habit.getDone()), status);
                 }
                 AnsiConsole.Write(table);
