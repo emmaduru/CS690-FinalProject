@@ -25,7 +25,7 @@ public class ConsoleUI
                 string habitName = AnsiConsole.Prompt(new TextPrompt<string>("Name of habit: "));
                 int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>("Habit Goal: "));
                 Habit newHabit = new Habit(habitName);
-                newHabit.updateGoal(habitGoal);
+                newHabit.UpdateGoal(habitGoal);
                 dataManager.AddHabit(newHabit);
                 AnsiConsole.WriteLine($"Habit '{newHabit}' successfully created.");
 
@@ -50,8 +50,8 @@ public class ConsoleUI
                 
                     int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>($"New goal for {choice}: "));
                     Habit habitChoice = new Habit(choice);
-                    habitChoice.updateGoal(habitGoal);
-                    dataManager.updateHabit(habitChoice);
+                    habitChoice.UpdateGoal(habitGoal);
+                    dataManager.UpdateHabit(habitChoice);
 
                     AnsiConsole.WriteLine($"{habitChoice} successfully updated. New goal is {habitGoal}.");
                 }
@@ -82,21 +82,21 @@ public class ConsoleUI
                                 "Go back"
                             }));
 
-                    Habit habit = dataManager.getHabit(choice);
+                    Habit habit = dataManager.GetHabit(choice);
                     
                     if (operation == "Add") {
                         int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>("How much do you want to add: "));
                     
-                        habit.addHabitDone(habitGoal);
-                        dataManager.updateHabit(habit);
-                        AnsiConsole.WriteLine($"{habit} successfully updated. {habit.getDone()} {habit} completed.");
+                        habit.AddHabitDone(habitGoal);
+                        dataManager.UpdateHabit(habit);
+                        AnsiConsole.WriteLine($"{habit} successfully updated. {habit.GetDone()} {habit} completed.");
                     }
 
                     if (operation == "Subtract") {
                         int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>("How much do you want to subtract: "));
-                        habit.subtractHabitDone(habitGoal);
-                        dataManager.updateHabit(habit);
-                        AnsiConsole.WriteLine($"{habit} successfully updated. {habit.getDone()} {habit} completed.");
+                        habit.SubtractHabitDone(habitGoal);
+                        dataManager.UpdateHabit(habit);
+                        AnsiConsole.WriteLine($"{habit} successfully updated. {habit.GetDone()} {habit} completed.");
                     }
 
                     
@@ -129,7 +129,7 @@ public class ConsoleUI
                             }));
                     if (deleteChoice == "Yes") {
                         Habit habitChoice = new Habit(choice);
-                        dataManager.deleteHabit(habitChoice);
+                        dataManager.DeleteHabit(habitChoice);
 
                         AnsiConsole.WriteLine($"{habitChoice} successfully deleted.");
                     }
@@ -151,12 +151,12 @@ public class ConsoleUI
                     foreach (Habit habit in dataManager.Habits) {
                         string status;
                         
-                        if (habit.getDone() == 0) {
+                        if (habit.GetDone() == 0) {
                             status = "[red]Not Started[/]";
                         } else {
-                            status = habit.isCompleted() ? "[green]Complete[/]" : "[red]Incomplete[/]";
+                            status = habit.IsCompleted() ? "[green]Complete[/]" : "[red]Incomplete[/]";
                         }
-                        table.AddRow(habit.Name, Convert.ToString(habit.getGoal()), Convert.ToString(habit.getDone()), status);
+                        table.AddRow(habit.Name, Convert.ToString(habit.GetGoal()), Convert.ToString(habit.GetDone()), status);
                     }
                     AnsiConsole.Write(table);
                 }

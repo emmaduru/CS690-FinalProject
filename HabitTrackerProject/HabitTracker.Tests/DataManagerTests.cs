@@ -31,8 +31,8 @@ public class DataManagerTests
     public void Test_DataManager_UpdateHabit()
     {
         Habit newHabit = new Habit("Goal3");
-        newHabit.updateGoal(1000);
-        dataManager.updateHabit(newHabit);
+        newHabit.UpdateGoal(1000);
+        dataManager.UpdateHabit(newHabit);
         int habitIndex = dataManager.Habits.FindIndex(t => t == newHabit);
         Assert.Equal(true, habitIndex != -1);
     }
@@ -42,7 +42,7 @@ public class DataManagerTests
     {
         Habit newHabit = new Habit("Goal4");
         dataManager.AddHabit(newHabit);
-        Habit gotHabit = dataManager.getHabit("Goal4");
+        Habit gotHabit = dataManager.GetHabit("Goal4");
         Assert.Equal(true, newHabit == gotHabit);
     }
 
@@ -50,7 +50,7 @@ public class DataManagerTests
     public void Test_DataManager_DeleteHabit()
     {
         Habit newHabit = new Habit("Goal4");
-        dataManager.deleteHabit(newHabit);
+        dataManager.DeleteHabit(newHabit);
         int habitIndex = dataManager.Habits.FindIndex(t => t == newHabit);
         Assert.Equal(true, habitIndex == -1);
     }
@@ -67,7 +67,7 @@ public class DataManagerTests
     {
         dataManager.ResetAllInputs();
         foreach(Habit habit in dataManager.Habits) {
-            Assert.Equal(0, habit.getDone());
+            Assert.Equal(0, habit.GetDone());
         }
     }
 }
