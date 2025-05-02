@@ -119,10 +119,20 @@ public class ConsoleUI
                     if (choice == "Go back") {
                         break;
                     }
-                    Habit habitChoice = new Habit(choice);
-                    dataManager.deleteHabit(habitChoice);
 
-                    AnsiConsole.WriteLine($"{habitChoice} successfully deleted.");
+                    string deleteChoice = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title($"[red]Are you sure you want to delete {choice}?[/]")
+                            .AddChoices(new[] {
+                                "Yes",
+                                "No"
+                            }));
+                    if (deleteChoice == "Yes") {
+                        Habit habitChoice = new Habit(choice);
+                        dataManager.deleteHabit(habitChoice);
+
+                        AnsiConsole.WriteLine($"{habitChoice} successfully deleted.");
+                    }
                 }
             } else if (command == "View report") {
                 
@@ -152,8 +162,28 @@ public class ConsoleUI
                 }
                 
             } else if (command == "Delete all habits") {
-                dataManager.DeleteAllHabits();
-                AnsiConsole.WriteLine("All habits have been deleted.");
+                    if (dataManager.Habits.Count == 0) {
+                        choice = AnsiConsole.Prompt(
+                            new SelectionPrompt<string>()
+                                .Title("There are no stored habits.")
+                                .AddChoices(GetHabitChoices()));
+                    } else {
+                        string deleteChoice = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("[red]Are you sure you want to delete all habits?[/]")
+                            .AddChoices(new[] {
+                                "Yes",
+                                "No"
+                            }));
+                        if (deleteChoice == "Yes") {
+                            dataManager.DeleteAllHabits();
+                            AnsiConsole.WriteLine("All habits have been deleted.");
+                        }
+                        
+                    }
+                
+
+                
             }
             
             command = ShowMainMenu();
