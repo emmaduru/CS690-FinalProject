@@ -11,7 +11,7 @@ public class ConsoleUI
 
     public void Show() {
 
-        Habit habit;
+        string choice;
         string operation;
         string command;
         
@@ -31,18 +31,11 @@ public class ConsoleUI
 
             } else if (command == "Update habit goals") {
 
-                
-                List<string> habitChoices = new List<string>();
-                foreach (Habit item in dataManager.Habits) {
-                    habitChoices.Add(item.Name);
-                }
-                habitChoices.Add("Go back");
-
                 while (true) {
-                    string choice = AnsiConsole.Prompt(
+                    choice = AnsiConsole.Prompt(
                         new SelectionPrompt<string>()
                             .Title($"Choose habit")
-                            .AddChoices(habitChoices));
+                            .AddChoices(GetHabitChoices()));
 
                     if (choice == "Go back") {
                         break;
@@ -59,35 +52,58 @@ public class ConsoleUI
             } else if (command == "Input habit"){
 
                 do {
-                    habit = AnsiConsole.Prompt(
-                        new SelectionPrompt<Habit>()
+                    choice = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
                             .Title("Choose habit")
-                            .AddChoices(dataManager.Habits));
+                            .AddChoices(GetHabitChoices()));
+
+                    if (choice == "Go back") {
+                        break;
+                    }
 
                     operation = AnsiConsole.Prompt(
                         new SelectionPrompt<string>()
-                            .Title($"Do you want to add or subtract from {habit}")
+                            .Title($"Do you want to add or subtract from {choice}")
                             .AddChoices(new[] {
                                 "Add",
                                 "Subtract",
                                 "Go back"
                             }));
+
+                    Habit habit = dataManager.getHabit(choice);
                     
                     if (operation == "Add") {
-                        habit.addHabitDone();
+                        int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>("How much do you want to add: "));
+                    
+                        habit.addHabitDone(habitGoal);
                         dataManager.updateHabit(habit);
+                        AnsiConsole.WriteLine($"{habit} successfully updated. {habit.getDone()} {habit} completed.");
                     }
 
                     if (operation == "Subtract") {
-                        habit.subtractHabitDone();
+                        int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>("How much do you want to subtract: "));
+                        habit.subtractHabitDone(habitGoal);
                         dataManager.updateHabit(habit);
+                        AnsiConsole.WriteLine($"{habit} successfully updated. {habit.getDone()} {habit} completed.");
                     }
 
-                    AnsiConsole.WriteLine($"{habit} successfully updated. {habit.getDone()} {habit} completed.");
+                    
 
-                } while (operation == "Go back");
+                } while (operation != "Go back");
 
 
+            } else if (command == "View report") {
+                Table table = new Table();
+                table.AddColumn("Habit");
+                table.AddColumn("Goal");
+                table.AddColumn("Done");
+                table.AddColumn("Status");
+
+                foreach (Habit habit in dataManager.Habits) {
+                    string status = habit.isCompleted() ? "[green]Complete[/]" : "[red]Incomplete[/]";
+                    table.AddRow(habit.Name, Convert.ToString(habit.getGoal()), Convert.ToString(habit.getDone()), status);
+                }
+                AnsiConsole.Write(table);
             }
             
             command = ShowMainMenu();
@@ -103,9 +119,20 @@ public class ConsoleUI
                     "Add habit",
                     "Update habit goals",
                     "Input habit",
+                    "View report",
                     "Exit program"
                 }));
 
         return command;
+    }
+
+    public List<string> GetHabitChoices() {
+        List<string> habitChoices = new List<string>();
+        foreach (Habit item in dataManager.Habits) {
+            habitChoices.Add(item.Name);
+        }
+        habitChoices.Add("Go back");
+
+        return habitChoices;     
     }
 }
