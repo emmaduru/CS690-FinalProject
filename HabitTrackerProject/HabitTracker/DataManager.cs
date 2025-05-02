@@ -56,4 +56,12 @@ public class DataManager {
         return Habits[index];
     }
 
+    public void deleteHabit(Habit habit) {
+        int habitIndex = Habits.FindIndex(t => t.Name == habit.Name);
+        if (habitIndex != -1) {
+            Habits.Remove(Habits[habitIndex]);
+            SynchronizeHabits();
+        }
+    }
+
 }
