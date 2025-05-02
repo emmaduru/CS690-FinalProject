@@ -36,4 +36,22 @@ public class DataManagerTests
         int habitIndex = dataManager.Habits.FindIndex(t => t == newHabit);
         Assert.Equal(true, habitIndex != -1);
     }
+
+    [Fact]
+    public void Test_DataManager_GetHabit()
+    {
+        Habit newHabit = new Habit("Goal4");
+        dataManager.AddHabit(newHabit);
+        Habit gotHabit = dataManager.getHabit("Goal4");
+        Assert.Equal(true, newHabit == gotHabit);
+    }
+
+    [Fact]
+    public void Test_DataManager_DeleteHabit()
+    {
+        Habit newHabit = new Habit("Goal4");
+        dataManager.deleteHabit(newHabit);
+        int habitIndex = dataManager.Habits.FindIndex(t => t == newHabit);
+        Assert.Equal(true, habitIndex == -1);
+    }
 }

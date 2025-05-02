@@ -90,8 +90,21 @@ public class ConsoleUI
                     
 
                 } while (operation != "Go back");
+            } else if (command == "Delete habit") {
+                while (true) {
+                    choice = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title($"Choose habit")
+                            .AddChoices(GetHabitChoices()));
 
+                    if (choice == "Go back") {
+                        break;
+                    }
+                    Habit habitChoice = new Habit(choice);
+                    dataManager.deleteHabit(habitChoice);
 
+                    AnsiConsole.WriteLine($"{habitChoice} successfully deleted.");
+                }
             } else if (command == "View report") {
                 Table table = new Table();
                 table.AddColumn("Habit");
@@ -119,6 +132,7 @@ public class ConsoleUI
                     "Add habit",
                     "Update habit goals",
                     "Input habit",
+                    "Delete habit",
                     "View report",
                     "Exit program"
                 }));
