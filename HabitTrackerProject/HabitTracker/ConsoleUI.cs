@@ -162,28 +162,48 @@ public class ConsoleUI
                 }
                 
             } else if (command == "Delete all habits") {
-                    if (dataManager.Habits.Count == 0) {
-                        choice = AnsiConsole.Prompt(
-                            new SelectionPrompt<string>()
-                                .Title("There are no stored habits.")
-                                .AddChoices(GetHabitChoices()));
-                    } else {
-                        string deleteChoice = AnsiConsole.Prompt(
+                if (dataManager.Habits.Count == 0) {
+                    choice = AnsiConsole.Prompt(
                         new SelectionPrompt<string>()
-                            .Title("[red]Are you sure you want to delete all habits?[/]")
-                            .AddChoices(new[] {
-                                "Yes",
-                                "No"
-                            }));
-                        if (deleteChoice == "Yes") {
-                            dataManager.DeleteAllHabits();
-                            AnsiConsole.WriteLine("All habits have been deleted.");
-                        }
-                        
+                            .Title("There are no stored habits.")
+                            .AddChoices(GetHabitChoices()));
+                } else {
+                    string deleteChoice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("[red]Are you sure you want to delete all habits?[/]")
+                        .AddChoices(new[] {
+                            "Yes",
+                            "No"
+                        }));
+                    if (deleteChoice == "Yes") {
+                        dataManager.DeleteAllHabits();
+                        AnsiConsole.WriteLine("All habits have been deleted.");
                     }
+                    
+                }
                 
 
                 
+            } else if (command == "Reset all inputs") {
+                if (dataManager.Habits.Count == 0) {
+                    choice = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("There are no stored habits.")
+                            .AddChoices(GetHabitChoices()));
+                } else {
+                    string resetChoice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("[red]Are you sure you want to reset all inputs?[/]")
+                        .AddChoices(new[] {
+                            "Yes",
+                            "No"
+                        }));
+                    if (resetChoice == "Yes") {
+                        dataManager.ResetAllInputs();
+                        AnsiConsole.WriteLine("All habit inputs have ben reset.");
+                    }
+                    
+                }
             }
             
             command = ShowMainMenu();
@@ -201,6 +221,7 @@ public class ConsoleUI
                     "Input habit",
                     "Delete habit",
                     "Delete all habits",
+                    "Reset all inputs",
                     "View report",
                     "Exit program"
                 }));
