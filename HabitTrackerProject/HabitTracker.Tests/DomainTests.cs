@@ -29,24 +29,25 @@ public class DomainTests
     [Fact]
     public void Test_Habit_AddHabitDone()
     {
-        newHabit.addHabitDone();
-        Assert.Equal(newHabit.getDone(), 1);
+        newHabit.addHabitDone(10);
+        Assert.Equal(newHabit.getDone(), 10);
     }
 
     [Fact]
     public void Test_Habit_SubtractHabitDone()
     {
-        newHabit.subtractHabitDone();
-        Assert.Equal(newHabit.getDone(), 0);
+        newHabit.addHabitDone(10);
+        newHabit.subtractHabitDone(5);
+        Assert.Equal(newHabit.getDone(), 5);
     }
 
     [Fact]
     public void Test_Habit_IsCompleted()
     {
         newHabit.updateGoal(10);
-        for (int i = 0; i < 10; i++) {
-            newHabit.addHabitDone();
-        }
+        newHabit.addHabitDone(20);
         Assert.Equal(newHabit.isCompleted(), true);
+        newHabit.subtractHabitDone(20);
+        Assert.Equal(newHabit.isCompleted(), false);
     }
 }

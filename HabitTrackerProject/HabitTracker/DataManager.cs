@@ -51,4 +51,9 @@ public class DataManager {
         }
     }
 
+    public Habit getHabit(string habitName) {
+        int index = Habits.FindIndex(t => t.Name == habitName);
+        return Habits[index];
+    }
+
 }

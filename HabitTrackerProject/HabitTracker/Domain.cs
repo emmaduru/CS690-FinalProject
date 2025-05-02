@@ -25,13 +25,15 @@ public class Habit {
         return this.Done;
     }
 
-    public void addHabitDone() {
-        this.Done += 1;
+    public void addHabitDone(int amount) {
+        this.Done += amount;
     }
 
-    public void subtractHabitDone() {
-        if (this.Done > 0) {
-            this.Done -= 1;
+    public void subtractHabitDone(int amount) {
+        if (this.Done > amount) {
+            this.Done -= amount;
+        } else {
+            this.Done = 0;
         }
     }
 
