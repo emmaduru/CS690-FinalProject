@@ -61,4 +61,13 @@ public class DataManagerTests
         dataManager.DeleteAllHabits();
         Assert.Equal(0, dataManager.Habits.Count);
     }
+
+    [Fact]
+    public void Test_DataManager_ResetAllInputs()
+    {
+        dataManager.ResetAllInputs();
+        foreach(Habit habit in dataManager.Habits) {
+            Assert.Equal(0, habit.getDone());
+        }
+    }
 }

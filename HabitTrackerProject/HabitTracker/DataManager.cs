@@ -69,4 +69,11 @@ public class DataManager {
         SynchronizeHabits();
     }
 
+    public void ResetAllInputs() {
+        for (int index = 0; index < Habits.Count; index++) {
+            Habits[index].setDoneZero();
+        }
+        SynchronizeHabits();
+    }
+
 }

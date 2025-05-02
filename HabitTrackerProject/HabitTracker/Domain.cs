@@ -37,6 +37,10 @@ public class Habit {
         }
     }
 
+    public void setDoneZero() {
+        this.Done = 0;
+    }
+
     public bool isCompleted() {
         if (this.Done >= this.getGoal()) {
             return true;
