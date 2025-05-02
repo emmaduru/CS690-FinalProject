@@ -32,10 +32,17 @@ public class ConsoleUI
             } else if (command == "Update habit goals") {
 
                 while (true) {
-                    choice = AnsiConsole.Prompt(
+                    if (dataManager.Habits.Count == 0) {
+                        choice = AnsiConsole.Prompt(
+                            new SelectionPrompt<string>()
+                                .Title("There are no stored habits.")
+                                .AddChoices(GetHabitChoices()));
+                    } else {
+                        choice = AnsiConsole.Prompt(
                         new SelectionPrompt<string>()
-                            .Title($"Choose habit")
+                            .Title("Choose habit")
                             .AddChoices(GetHabitChoices()));
+                    }
 
                     if (choice == "Go back") {
                         break;
@@ -50,13 +57,18 @@ public class ConsoleUI
                 }
 
             } else if (command == "Input habit"){
-
                 do {
-                    choice = AnsiConsole.Prompt(
+                    if (dataManager.Habits.Count == 0) {
+                        choice = AnsiConsole.Prompt(
+                            new SelectionPrompt<string>()
+                                .Title("There are no stored habits.")
+                                .AddChoices(GetHabitChoices()));
+                    } else {
+                        choice = AnsiConsole.Prompt(
                         new SelectionPrompt<string>()
                             .Title("Choose habit")
                             .AddChoices(GetHabitChoices()));
-
+                    }
                     if (choice == "Go back") {
                         break;
                     }
@@ -92,10 +104,17 @@ public class ConsoleUI
                 } while (operation != "Go back");
             } else if (command == "Delete habit") {
                 while (true) {
-                    choice = AnsiConsole.Prompt(
+                    if (dataManager.Habits.Count == 0) {
+                        choice = AnsiConsole.Prompt(
+                            new SelectionPrompt<string>()
+                                .Title("There are no stored habits.")
+                                .AddChoices(GetHabitChoices()));
+                    } else {
+                        choice = AnsiConsole.Prompt(
                         new SelectionPrompt<string>()
-                            .Title($"Choose habit")
+                            .Title("Choose habit")
                             .AddChoices(GetHabitChoices()));
+                    }
 
                     if (choice == "Go back") {
                         break;
@@ -106,6 +125,18 @@ public class ConsoleUI
                     AnsiConsole.WriteLine($"{habitChoice} successfully deleted.");
                 }
             } else if (command == "View report") {
+                
+                if (dataManager.Habits.Count == 0) {
+                    choice = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("There are no stored habits.")
+                            .AddChoices(GetHabitChoices()));
+                } else {
+                    choice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Choose habit")
+                        .AddChoices(GetHabitChoices()));
+                }
                 Table table = new Table();
                 table.AddColumn("Habit");
                 table.AddColumn("Goal");
