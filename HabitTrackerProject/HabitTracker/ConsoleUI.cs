@@ -132,28 +132,28 @@ public class ConsoleUI
                             .Title("There are no stored habits.")
                             .AddChoices(GetHabitChoices()));
                 } else {
-                    choice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("Choose habit")
-                        .AddChoices(GetHabitChoices()));
-                }
-                Table table = new Table();
-                table.AddColumn("Habit");
-                table.AddColumn("Goal");
-                table.AddColumn("Done");
-                table.AddColumn("Status");
+                    Table table = new Table();
+                    table.AddColumn("Habit");
+                    table.AddColumn("Goal");
+                    table.AddColumn("Done");
+                    table.AddColumn("Status");
 
-                foreach (Habit habit in dataManager.Habits) {
-                    string status;
-                    
-                    if (habit.getDone() == 0) {
-                        status = "[red]Not Started[/]";
-                    } else {
-                        status = habit.isCompleted() ? "[green]Complete[/]" : "[red]Incomplete[/]";
+                    foreach (Habit habit in dataManager.Habits) {
+                        string status;
+                        
+                        if (habit.getDone() == 0) {
+                            status = "[red]Not Started[/]";
+                        } else {
+                            status = habit.isCompleted() ? "[green]Complete[/]" : "[red]Incomplete[/]";
+                        }
+                        table.AddRow(habit.Name, Convert.ToString(habit.getGoal()), Convert.ToString(habit.getDone()), status);
                     }
-                    table.AddRow(habit.Name, Convert.ToString(habit.getGoal()), Convert.ToString(habit.getDone()), status);
+                    AnsiConsole.Write(table);
                 }
-                AnsiConsole.Write(table);
+                
+            } else if (command == "Delete all habits") {
+                dataManager.DeleteAllHabits();
+                AnsiConsole.WriteLine("All habits have been deleted.");
             }
             
             command = ShowMainMenu();
@@ -170,6 +170,7 @@ public class ConsoleUI
                     "Update habit goals",
                     "Input habit",
                     "Delete habit",
+                    "Delete all habits",
                     "View report",
                     "Exit program"
                 }));

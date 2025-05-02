@@ -54,4 +54,11 @@ public class DataManagerTests
         int habitIndex = dataManager.Habits.FindIndex(t => t == newHabit);
         Assert.Equal(true, habitIndex == -1);
     }
+
+    [Fact]
+    public void Test_DataManager_DeleteAllHabits()
+    {
+        dataManager.DeleteAllHabits();
+        Assert.Equal(0, dataManager.Habits.Count);
+    }
 }

@@ -4,7 +4,7 @@ using System;
 
 public class DataManager {
 
-    public List<Habit> Habits { get; }
+    public List<Habit> Habits { get; set; }
 
     public DataManager() {
         Habits = new List<Habit>();
@@ -62,6 +62,11 @@ public class DataManager {
             Habits.Remove(Habits[habitIndex]);
             SynchronizeHabits();
         }
+    }
+
+    public void DeleteAllHabits() {
+        Habits = new List<Habit>();
+        SynchronizeHabits();
     }
 
 }
