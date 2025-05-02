@@ -22,7 +22,7 @@ public class DataManager {
                 int done = int.Parse(splitted[2]);
 
                 Habit newHabit = new Habit(name);
-                newHabit.updateGoal(goal);
+                newHabit.UpdateGoal(goal);
                 Habits.Add(newHabit);
             }
         }   
@@ -33,7 +33,7 @@ public class DataManager {
         List<string> habitData = new List<string>();
 
         foreach (Habit item in Habits) {
-            string habitLine = item + "," + item.getGoal() + "," + item.getDone();
+            string habitLine = item + "," + item.GetGoal() + "," + item.GetDone();
             File.AppendAllText("habits.txt", habitLine + Environment.NewLine);
         }
     }
@@ -43,7 +43,7 @@ public class DataManager {
         SynchronizeHabits();
     }
 
-    public void updateHabit(Habit habit) {
+    public void UpdateHabit(Habit habit) {
         int habitIndex = Habits.FindIndex(t => t.Name == habit.Name);
         if (habitIndex != -1) {
             Habits[habitIndex] = habit;
@@ -51,12 +51,12 @@ public class DataManager {
         }
     }
 
-    public Habit getHabit(string habitName) {
+    public Habit GetHabit(string habitName) {
         int index = Habits.FindIndex(t => t.Name == habitName);
         return Habits[index];
     }
 
-    public void deleteHabit(Habit habit) {
+    public void DeleteHabit(Habit habit) {
         int habitIndex = Habits.FindIndex(t => t.Name == habit.Name);
         if (habitIndex != -1) {
             Habits.Remove(Habits[habitIndex]);
@@ -71,7 +71,7 @@ public class DataManager {
 
     public void ResetAllInputs() {
         for (int index = 0; index < Habits.Count; index++) {
-            Habits[index].setDoneZero();
+            Habits[index].SetDoneZero();
         }
         SynchronizeHabits();
     }

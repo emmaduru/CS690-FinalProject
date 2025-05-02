@@ -13,23 +13,23 @@ public class Habit {
         this.Goal = 0;
     }
 
-    public int getGoal() {
+    public int GetGoal() {
         return this.Goal;
     }
 
-    public void updateGoal(int goal) {
+    public void UpdateGoal(int goal) {
         this.Goal = goal;
     }
 
-    public int getDone() {
+    public int GetDone() {
         return this.Done;
     }
 
-    public void addHabitDone(int amount) {
+    public void AddHabitDone(int amount) {
         this.Done += amount;
     }
 
-    public void subtractHabitDone(int amount) {
+    public void SubtractHabitDone(int amount) {
         if (this.Done > amount) {
             this.Done -= amount;
         } else {
@@ -37,12 +37,12 @@ public class Habit {
         }
     }
 
-    public void setDoneZero() {
+    public void SetDoneZero() {
         this.Done = 0;
     }
 
-    public bool isCompleted() {
-        if (this.Done >= this.getGoal()) {
+    public bool IsCompleted() {
+        if (this.Done >= this.GetGoal()) {
             return true;
         } else {
             return false;

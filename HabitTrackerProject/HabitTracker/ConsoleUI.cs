@@ -4,238 +4,51 @@ using Spectre.Console;
 
 public class ConsoleUI
 {
-    DataManager dataManager;
+    ConsoleUIViews consoleUIViews;
     public ConsoleUI () {
-        dataManager = new DataManager();
+        consoleUIViews = new ConsoleUIViews();
     }
 
     public void Show() {
-
-        string choice;
-        string operation;
         string command;
         
         // Main menu
-        command = ShowMainMenu();
+        command = consoleUIViews.ShowMainMenu();
 
         while (command != "Exit program") {
 
             if (command == "Add habit") {
 
-                string habitName = AnsiConsole.Prompt(new TextPrompt<string>("Name of habit: "));
-                int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>("Habit Goal: "));
-                Habit newHabit = new Habit(habitName);
-                newHabit.updateGoal(habitGoal);
-                dataManager.AddHabit(newHabit);
-                AnsiConsole.WriteLine($"Habit '{newHabit}' successfully created.");
+                consoleUIViews.AddHabitView();
 
             } else if (command == "Update habit goals") {
 
-                while (true) {
-                    if (dataManager.Habits.Count == 0) {
-                        choice = AnsiConsole.Prompt(
-                            new SelectionPrompt<string>()
-                                .Title("There are no stored habits.")
-                                .AddChoices(GetHabitChoices()));
-                    } else {
-                        choice = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("Choose habit")
-                            .AddChoices(GetHabitChoices()));
-                    }
-
-                    if (choice == "Go back") {
-                        break;
-                    }
-                
-                    int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>($"New goal for {choice}: "));
-                    Habit habitChoice = new Habit(choice);
-                    habitChoice.updateGoal(habitGoal);
-                    dataManager.updateHabit(habitChoice);
-
-                    AnsiConsole.WriteLine($"{habitChoice} successfully updated. New goal is {habitGoal}.");
-                }
+                consoleUIViews.UpdateHabitGoalsView();
 
             } else if (command == "Input habit"){
-                do {
-                    if (dataManager.Habits.Count == 0) {
-                        choice = AnsiConsole.Prompt(
-                            new SelectionPrompt<string>()
-                                .Title("There are no stored habits.")
-                                .AddChoices(GetHabitChoices()));
-                    } else {
-                        choice = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("Choose habit")
-                            .AddChoices(GetHabitChoices()));
-                    }
-                    if (choice == "Go back") {
-                        break;
-                    }
 
-                    operation = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title($"Do you want to add or subtract from {choice}")
-                            .AddChoices(new[] {
-                                "Add",
-                                "Subtract",
-                                "Go back"
-                            }));
+                consoleUIViews.InputHabitView();
 
-                    Habit habit = dataManager.getHabit(choice);
-                    
-                    if (operation == "Add") {
-                        int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>("How much do you want to add: "));
-                    
-                        habit.addHabitDone(habitGoal);
-                        dataManager.updateHabit(habit);
-                        AnsiConsole.WriteLine($"{habit} successfully updated. {habit.getDone()} {habit} completed.");
-                    }
-
-                    if (operation == "Subtract") {
-                        int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>("How much do you want to subtract: "));
-                        habit.subtractHabitDone(habitGoal);
-                        dataManager.updateHabit(habit);
-                        AnsiConsole.WriteLine($"{habit} successfully updated. {habit.getDone()} {habit} completed.");
-                    }
-
-                    
-
-                } while (operation != "Go back");
             } else if (command == "Delete habit") {
-                while (true) {
-                    if (dataManager.Habits.Count == 0) {
-                        choice = AnsiConsole.Prompt(
-                            new SelectionPrompt<string>()
-                                .Title("There are no stored habits.")
-                                .AddChoices(GetHabitChoices()));
-                    } else {
-                        choice = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("Choose habit")
-                            .AddChoices(GetHabitChoices()));
-                    }
 
-                    if (choice == "Go back") {
-                        break;
-                    }
+                consoleUIViews.DeleteHabitView();
 
-                    string deleteChoice = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title($"[red]Are you sure you want to delete {choice}?[/]")
-                            .AddChoices(new[] {
-                                "Yes",
-                                "No"
-                            }));
-                    if (deleteChoice == "Yes") {
-                        Habit habitChoice = new Habit(choice);
-                        dataManager.deleteHabit(habitChoice);
-
-                        AnsiConsole.WriteLine($"{habitChoice} successfully deleted.");
-                    }
-                }
             } else if (command == "View report") {
                 
-                if (dataManager.Habits.Count == 0) {
-                    choice = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("There are no stored habits.")
-                            .AddChoices(GetHabitChoices()));
-                } else {
-                    Table table = new Table();
-                    table.AddColumn("Habit");
-                    table.AddColumn("Goal");
-                    table.AddColumn("Done");
-                    table.AddColumn("Status");
-
-                    foreach (Habit habit in dataManager.Habits) {
-                        string status;
-                        
-                        if (habit.getDone() == 0) {
-                            status = "[red]Not Started[/]";
-                        } else {
-                            status = habit.isCompleted() ? "[green]Complete[/]" : "[red]Incomplete[/]";
-                        }
-                        table.AddRow(habit.Name, Convert.ToString(habit.getGoal()), Convert.ToString(habit.getDone()), status);
-                    }
-                    AnsiConsole.Write(table);
-                }
+                consoleUIViews.ViewReportView();
                 
             } else if (command == "Delete all habits") {
-                if (dataManager.Habits.Count == 0) {
-                    choice = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("There are no stored habits.")
-                            .AddChoices(GetHabitChoices()));
-                } else {
-                    string deleteChoice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("[red]Are you sure you want to delete all habits?[/]")
-                        .AddChoices(new[] {
-                            "Yes",
-                            "No"
-                        }));
-                    if (deleteChoice == "Yes") {
-                        dataManager.DeleteAllHabits();
-                        AnsiConsole.WriteLine("All habits have been deleted.");
-                    }
-                    
-                }
-                
 
+                consoleUIViews.DeleteAllHabitsView();
                 
             } else if (command == "Reset all inputs") {
-                if (dataManager.Habits.Count == 0) {
-                    choice = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("There are no stored habits.")
-                            .AddChoices(GetHabitChoices()));
-                } else {
-                    string resetChoice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("[red]Are you sure you want to reset all inputs?[/]")
-                        .AddChoices(new[] {
-                            "Yes",
-                            "No"
-                        }));
-                    if (resetChoice == "Yes") {
-                        dataManager.ResetAllInputs();
-                        AnsiConsole.WriteLine("All habit inputs have ben reset.");
-                    }
-                    
-                }
+                
+                consoleUIViews.ResetAllInputsView();
+
             }
             
-            command = ShowMainMenu();
+            command = consoleUIViews.ShowMainMenu();
         }
 
-    }
-
-    public string ShowMainMenu() {
-        string command = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("What do you want to do?")
-                .AddChoices(new[] {
-                    "Add habit",
-                    "Update habit goals",
-                    "Input habit",
-                    "Delete habit",
-                    "Delete all habits",
-                    "Reset all inputs",
-                    "View report",
-                    "Exit program"
-                }));
-
-        return command;
-    }
-
-    public List<string> GetHabitChoices() {
-        List<string> habitChoices = new List<string>();
-        foreach (Habit item in dataManager.Habits) {
-            habitChoices.Add(item.Name);
-        }
-        habitChoices.Add("Go back");
-
-        return habitChoices;     
     }
 }
