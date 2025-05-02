@@ -19,15 +19,41 @@ public class ConsoleUI
         command = ShowMainMenu();
 
         while (command != "Exit program") {
-            if (command == "Set habit goals") {
-                Console.WriteLine("Set goals for: ");
-                for (int index = 0; index < dataManager.Habits.Count(); index++) {
-                    Habit habitItem = dataManager.Habits[index];
-                    int goal = AnsiConsole.Prompt(new TextPrompt<int>(habitItem.Name + ": "));
-                    habitItem.updateGoal(goal);
 
-                    // update habits.txt
-                    dataManager.updateHabit(habitItem);
+            if (command == "Add habit") {
+
+                string habitName = AnsiConsole.Prompt(new TextPrompt<string>("Name of habit: "));
+                int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>("Habit Goal: "));
+                Habit newHabit = new Habit(habitName);
+                newHabit.updateGoal(habitGoal);
+                dataManager.AddHabit(newHabit);
+                AnsiConsole.WriteLine($"Habit '{newHabit}' successfully created.");
+
+            } else if (command == "Update habit goals") {
+
+                
+                List<string> habitChoices = new List<string>();
+                foreach (Habit item in dataManager.Habits) {
+                    habitChoices.Add(item.Name);
+                }
+                habitChoices.Add("Go back");
+
+                while (true) {
+                    string choice = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title($"Choose habit")
+                            .AddChoices(habitChoices));
+
+                    if (choice == "Go back") {
+                        break;
+                    }
+                
+                    int habitGoal = AnsiConsole.Prompt(new TextPrompt<int>($"New goal for {choice}: "));
+                    Habit habitChoice = new Habit(choice);
+                    habitChoice.updateGoal(habitGoal);
+                    dataManager.updateHabit(habitChoice);
+
+                    AnsiConsole.WriteLine($"{habitChoice} successfully updated. New goal is {habitGoal}.");
                 }
 
             } else if (command == "Input habit"){
@@ -49,15 +75,11 @@ public class ConsoleUI
                     
                     if (operation == "Add") {
                         habit.addHabitDone();
-
-                        // update habits.txt
                         dataManager.updateHabit(habit);
                     }
 
                     if (operation == "Subtract") {
                         habit.subtractHabitDone();
-
-                        // update habits.txt
                         dataManager.updateHabit(habit);
                     }
 
@@ -78,9 +100,10 @@ public class ConsoleUI
             new SelectionPrompt<string>()
                 .Title("What do you want to do?")
                 .AddChoices(new[] {
-                "Set habit goals",
-                "Input habit",
-                "Exit program"
+                    "Add habit",
+                    "Update habit goals",
+                    "Input habit",
+                    "Exit program"
                 }));
 
         return command;

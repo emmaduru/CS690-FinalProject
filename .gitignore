@@ -5,6 +5,8 @@
 
 # dotenv files
 .env
+habits.txt
+test.txt
 
 # User-specific files
 *.rsuser
