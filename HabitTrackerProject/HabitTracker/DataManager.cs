@@ -29,13 +29,13 @@ public class DataManager {
     }
 
     public void SynchronizeHabits() {
+        File.Delete("habits.txt");
         List<string> habitData = new List<string>();
 
         foreach (Habit item in Habits) {
             string habitLine = item + "," + item.getGoal() + "," + item.getDone();
-            habitData.Add(habitLine);
+            File.AppendAllText("habits.txt", habitLine + Environment.NewLine);
         }
-        File.WriteAllLines("habits.txt", habitData);
     }
 
     public void AddHabit(Habit habit) {
